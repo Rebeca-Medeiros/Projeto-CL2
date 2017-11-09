@@ -1,0 +1,7 @@
+https://mengyiwen.weebly.com/uploads/2/4/7/7/24776290/ee330_final_project_report.pdf // Projeto de elevador com verilog
+https://pt.slideshare.net/visheshsingh19/design-of-elevator-controller-using-verilog-hdl // Elevador com switch e maquina de estados
+http://www.pld.ttu.ee/~uljana/IAY0040/lab4/Lab4.htm // Elevador com controle de direção
+http://www-inst.eecs.berkeley.edu/~cs150/fa05/HWs/HW5sol.pdf // Problema similar (elevador responde apenas um comando por vez)
+https://www.cs.indiana.edu/classes/p415/post/projects/arkautuc-mchivuku-bkoniden/projectReport.pdf // Elevador que para em todos os andares
+https://electronics.stackexchange.com/questions/200803/modeling-the-elevator-as-a-finite-state-machine // Problemas similares
+
