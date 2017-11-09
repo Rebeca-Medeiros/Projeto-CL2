@@ -4,4 +4,4 @@ http://www.pld.ttu.ee/~uljana/IAY0040/lab4/Lab4.htm // Elevador com controle de 
 http://www-inst.eecs.berkeley.edu/~cs150/fa05/HWs/HW5sol.pdf // Problema similar (elevador responde apenas um comando por vez)
 https://www.cs.indiana.edu/classes/p415/post/projects/arkautuc-mchivuku-bkoniden/projectReport.pdf // Elevador que para em todos os andares
 https://electronics.stackexchange.com/questions/200803/modeling-the-elevator-as-a-finite-state-machine // Problemas similares
-
+http://www.asic-world.com/verilog/verilog_one_day2.html // Tutoriais de verilog
