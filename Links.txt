@@ -9,3 +9,8 @@ https://electronics.stackexchange.com/questions/200803/modeling-the-elevator-as-
 http://www.asic-world.com/verilog/verilog_one_day2.html // Tutoriais de verilog
 http://tuline.com/wp-content/uploads/2015/11/Finite-State-Machine-Examples.pdf // Máquina de estados revisão
 http://eprints.utem.edu.my/8575/1/Design_And_Implementation_of_Elevator_Controller_On_A_FPGA_-24_Pages.pdf // Projeto similar
+
+Acessados dia: 23/11 (durante o horário da aula)
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.428.6819&rep=rep1&type=pdf // Artigo sobre elevador com verilog
+
+
