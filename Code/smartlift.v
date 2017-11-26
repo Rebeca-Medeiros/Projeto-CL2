@@ -170,12 +170,12 @@ module smartlift(SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50);
 				end
 			end
 			
-			/*andar8: begin
-				if( (s > 8) && (s < 9) ) begin
-					estado_atual <= andar8;
+			andar8: begin
+				if( (s == 8) && (s < 9) ) begin
+					//estado_atual <= andar8;
 					estado_anterior <= andar8;
 				end
-			end*/
+			end
 				
 			endcase
 
