@@ -1,11 +1,11 @@
 //------------------------------------//
-//       CIRCUITOS LÃ“GICOS 2          //
-//        AULA PRÃTICA: LCD           //
+//       CIRCUITOS LÓGICOS 2          //
+//        AULA PRÁTICA: LCD           //
 //            EXEMPLO 02              //
 //                                    //
 //          EUDISLEY ANJOS            //
-//       CENTRO DE INFORMÃTICA        //
-//  UNIVERSIDADE FEDERAL DA PARAÃBA   //
+//       CENTRO DE INFORMÁTICA        //
+//  UNIVERSIDADE FEDERAL DA PARAÍBA   //
 //------------------------------------//
 
 module LCD(

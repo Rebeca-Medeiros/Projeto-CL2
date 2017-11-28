@@ -3,7 +3,7 @@ module smartlift(SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 	//input LCD, todas as entradas do lcd
 	//input 
 	output	[7:0]	LCD_DATA; //entrada do lcd
-	output	LCD_RW, LCD_EN, LCD_RS; //saÃ­da do lcd
+	output	LCD_RW, LCD_EN, LCD_RS; //saída do lcd
 	input [8:0]SW; 		//andar selecionado
 	input KEY0;         //solicitar o andar
 	input CLOCK_50;		
@@ -148,6 +148,7 @@ module smartlift(SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 				rs = 0;
 				
 				if ( s < 1 ) begin
+					rs = 1;
 					estado_atual <= andar0;
 					estado_anterior <= andar1;
 					movimento = 2;					
@@ -157,93 +158,128 @@ module smartlift(SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 			
 			andar2: begin
 				if ( s > 2 ) begin
+					rs = 1;
 					estado_atual <= andar3;
 					estado_anterior <= andar2; 
-					//movimento = 1;
+					movimento = 1;
 				end
+				rs = 0;
+				
 				if ( s < 2 ) begin
+					rs = 1;
 					estado_atual <= andar1;
 					estado_anterior <= andar2;
-					//movimento = 1;
+					movimento = 1;
 				end
+				rs = 0;
 			end
 			
 			andar3: begin
 				if ( s > 3 ) begin
+					rs = 1;
 					estado_atual <= andar4;
 					estado_anterior <= andar3;
-					//movimento = 1;
+					movimento = 1;
 				end
+				rs = 0;
+				
 				if ( s < 3 ) begin
+					rs = 1;
 					estado_atual <= andar2;
 					estado_anterior <= andar3;
-					//movimento = 2;
+					movimento = 2;
 				end
+				rs = 0;
 			end
 			
 			andar4: begin
 				if ( s > 4 ) begin
+					rs = 1;
 					estado_atual <= andar5;
 					estado_anterior <= andar4; 
-					//movimento = 1;
+					movimento = 1;
 				end
+				rs = 0;
+				
 				if ( s < 4 ) begin
+					rs = 1;
 					estado_atual <= andar3;
 					estado_anterior <= andar4;
-					//movimento = 2;
+					movimento = 2;
 				end
+				rs = 0;
 			end
 			
 			andar5: begin
 				if ( s > 5 ) begin
+					rs = 1;
 					estado_atual <= andar6;
 					estado_anterior <= andar5; 
-					//movimento = 1;
+					movimento = 1;
 				end
+				rs = 0;
+				
 				if ( s < 5 ) begin
+					rs = 1;
 					estado_atual <= andar4;
 					estado_anterior <= andar5;
-					//movimento = 2;
+					movimento = 2;
 				end
+				rs = 0;
 			end
 			
 			andar6: begin
 				if ( s > 6 ) begin
+					rs = 1;
 					estado_atual <= andar7;
 					estado_anterior <= andar6;
-					//movimento = 1; 
+					movimento = 1; 
 				end
+				rs = 0;
+				
 				if ( s < 6 ) begin
+					rs = 1;
 					estado_atual <= andar5;
 					estado_anterior <= andar6;
-					//movimento = 2;				
+					movimento = 2;				
 				end
+				rs = 0;
 			end
 			
 			andar7: begin
 				if ( s > 7 ) begin
+					rs = 1;
 					estado_atual <= andar8;
 					estado_anterior <= andar7; 
-					//movimento = 1;
+					movimento = 1;
 				end
+				rs = 0;
+				
 				if ( s < 7 ) begin
+					rs = 1;
 					estado_atual <= andar6;
 					estado_anterior <= andar7;
-					//movimento = 2;
+					movimento = 2;
 				end
+				rs = 0;
 			end
 			
 			andar8: begin
 				if ( s < 8 ) begin
+					rs = 1;
 					estado_atual <= andar7;
 					estado_anterior <= andar8;
-					//movimento = 0; a
+					movimento = 0; a
 				end
-				if ( s < 8 ) begin
+				rs = 0;
+				
+			    /*	if ( s < 8 ) begin
+					rs = 1;
 					estado_atual <= andar7;
 					estado_anterior <= andar8;
-					//movimento = 1;
+					movimento = 1;
 				end
+				rs = 0;*/
 			end
 			
 			endcase
