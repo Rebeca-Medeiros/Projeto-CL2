@@ -10,6 +10,18 @@
 
 //Estados =  Parado , subindo e descendo
 
+//------------------------------------//
+//       CIRCUITOS LÃ“GICOS 2          //
+//        AULA PRÃTICA: LCD           //
+//            EXEMPLO 02              //
+//                                    //
+//          EUDISLEY ANJOS            //
+//       CENTRO DE INFORMÃTICA        //
+//  UNIVERSIDADE FEDERAL DA PARAÃBA   //
+//------------------------------------//
+
+//Estados =  Parado , subindo e descendo
+
 module	LCD_TEST (	//	Host Side //Chamar lcd teste no main
 					iCLK,iRST_N,
 					//	LCD Side
@@ -86,6 +98,85 @@ end
 -------------------------------------------------------------------
 --                        ASCII HEX TABLE
 --  Hex                        Low Hex Digit
+-- Value  0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
+------\----------------------------------------------------------------
+--H  2 |  SP  !   "   #   $   %   &   '   (   )   *   +   ,   -   .   /
+--i  3 |  0   1   2   3   4   5   6   7   8   9   :   ;   <   =   >   ?
+--g  4 |  @   A   B   C   D   E   F   G   H   I   J   K   L   M   N   O
+--h  5 |  P   Q   R   S   T   U   V   W   X   Y   Z   [   \   ]   ^   _
+--   6 |  `   a   b   c   d   e   f   g   h   i   j   k   l   m   n   o
+--   7 |  p   q   r   s   t   u   v   w   x   y   z   {   |   }   ~ DEL
+-----------------------------------------------------------------------
+-- Example "A" is row 4 column 1, so hex value is 8'h41"
+-- *see LCD Controller's Datasheet for other graphics characters available
+*/
+integer movimento; // 0 - parado, 1 - subindo, 2 - descendo
+
+always
+begin
+	case(LUT_INDEX)
+	//	Initial
+	LCD_INTIAL+0:	LUT_DATA	<=	9'h038;
+	LCD_INTIAL+1:	LUT_DATA	<=	9'h00C;
+	LCD_INTIAL+2:	LUT_DATA	<=	9'h001;
+	LCD_INTIAL+3:	LUT_DATA	<=	9'h006;
+	LCD_INTIAL+4:	LUT_DATA	<=	9'h080;
+	
+	if(Move == 0){
+
+	//	Line 1
+	LCD_LINE1+0:	LUT_DATA	<=	9'h150;	// P 
+	LCD_LINE1+1:	LUT_DATA	<=	9'h161; // a 
+	LCD_LINE1+2:	LUT_DATA	<=	9'h154; // r
+	LCD_LINE1+3:	LUT_DATA	<=	9'h161; // a
+	LCD_LINE1+4:   	LUT_DATA	<=	9'h164; // d
+	LCD_LINE1+5:    LUT_DATA    <=  9'h16F; // o
+	LCD_LINE1+6:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+8:    LUT_DATA    <=  9'h15F; // _
+	//LCD_LINE1+13:	LUT_DATA	<=	9'h120; // SP
+	}
+
+	//	Change Line
+	LCD_CH_LINE:	LUT_DATA	<=	9'h0C0;
+	
+	if(Move == 1){
+	//	Line 1
+	LCD_LINE1+0:	LUT_DATA	<=	9'h153;	// S 
+	LCD_LINE1+1:	LUT_DATA	<=	9'h175; // u  
+	LCD_LINE1+2:	LUT_DATA	<=	9'h162; // b 
+	LCD_LINE1+3:	LUT_DATA	<=	9'h169; // i 
+	LCD_LINE1+4:	LUT_DATA	<=	9'h16E; // n
+	LCD_LINE1+5:    LUT_DATA    <=  9'h164; // d
+	LCD_LINE1+6:    LUT_DATA    <=  9'h16F; // o
+	LCD_LINE1+7:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+8:    LUT_DATA    <=  9'h12B; // +
+	
+	}
+    
+    if(Movimento == 2){
+	//	Line 2
+	LCD_LINE2+0:	LUT_DATA	<=	9'h144;	// D
+	LCD_LINE2+1:	LUT_DATA	<=	9'h165; // e
+	LCD_LINE2+2:    LUT_DATA    <=  9'h173; // s
+	LCD_LINE2+3:    LUT_DATA    <=  9'h163; // c
+	endcase
+end
+
+LCD_Controller 		u0	(	//	Host Side
+							.iDATA(mLCD_DATA),
+							.iRS(mLCD_RS),
+							.iStart(mLCD_Start),
+							.oDone(mLCD_Done),
+							.iCLK(iCLK),
+							.iRST_N(iRST_N),
+							//	LCD Interface
+							.LCD_DATA(LCD_DATA),
+							.LCD_RW(LCD_RW),
+							.LCD_EN(LCD_EN),
+							.LCD_RS(LCD_RS)	);
+
+endmodule
+
 -- Value  0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
 ------\----------------------------------------------------------------
 --H  2 |  SP  !   "   #   $   %   &   '   (   )   *   +   ,   -   .   /
