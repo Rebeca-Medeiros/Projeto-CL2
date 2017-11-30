@@ -1,34 +1,61 @@
-module smartlift(SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA, 
-				 LCD_EN, LCD_RS, LCD_RW);
-	//input LCD, todas as entradas do lcd
-	//input 
-	output	[7:0]	LCD_DATA; //entrada do lcd
-	output	LCD_RW, LCD_EN, LCD_RS; //saída do lcd
-	input [8:0]SW; 		//andar selecionado
-	input KEY0;         //solicitar o andar
-	input CLOCK_50;		
-	output reg LED_G;	//porta aberta
-	output reg LED_R;	//porta fechada
-	output reg[6:0]HEX0 = ~7'h06;	//print andar selecionado
-	output reg[6:0]HEX1 = ~7'h06;	//andar atual
+module smartlift(/*SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA, 
+				 LCD_EN, LCD_RS, LCD_RW, LCD_ON, LCD_BLON*/
+				 output	[7:0]	LCD_DATA, //entrada do lcd
+				 output	LCD_RW, LCD_EN, LCD_RS, LCD_ON, LCD_BLON, //saída do lcd
+				 input [8:0]SW, 		//andar selecionado
+				 input KEY0,         //solicitar o andar
+				 input CLOCK_50,		
+				 output reg LED_G,	//porta aberta
+	             output reg LED_R,	//porta fechada
+	             output reg[6:0]HEX0,	//print andar selecionado
+	             output reg[6:0]HEX1
+	             );
 	wire DLY_RST;
 	reg rs = 0;
+	reg [31:0] aux;
+	reg [31:0] CLOCK;
+	reg [31:0] aux2;
+	reg [31:0] CLOCK2;
+	reg [60:0] aux3;
+	reg [60:0] CLOCK3;
+	
+	
+	integer count = 0;
+	
+	// turn LCD ON
+	assign    LCD_ON        =    1'b1;
+	assign    LCD_BLON    =    1'b1;
+	
 	
 	//seg - (a, b, c, d, e, f, g)
 	//seg - 1 desligado e 0 ligado
 	
-	integer movimento; // 0 - parado, 1 - subindo, 2 - descendo 
+	//reg verifica_reset = 0;
+	// integer movimento; // 0 - parado, 1 - subindo, 2 - descendo 
 	integer s; //andar solicitado
-	reg [1:0] estado_atual, estado_anterior;
-	parameter andar0 = 0, andar1 = 1, andar2 = 2, andar3 = 3, andar4 = 4, andar5 = 5, andar6 = 6, andar7 = 7, andar8 = 8;
+	integer aux_s; //andar atual
+	reg [1:0] estado_atual;
+	parameter parado = 0, subindo = 1, descendo = 2, inativo = 3;
+	// parado subindo descendo 		
 	
-	/*
-	reg clk;
+	always @(posedge CLOCK_50)begin
+		if(aux == 0)begin
+			aux  <= 24999999;
+			CLOCK <= ~CLOCK;
+		end else begin
+			aux <= aux - 1;
+		end
+	end
 	
-	initial clk = 0;
+	always @(posedge CLOCK_50)begin
+		if(aux2 == 0)begin
+			aux2  <= 49999999;
+			CLOCK2 <= ~CLOCK2;
+		end else begin
+			aux2 <= aux2 - 1;
+		end
+	end	
 	
-	always #1 clk=~clk;	
-	*/
 	
 	always @( negedge KEY0 ) begin 
 		case (SW) 	
@@ -82,209 +109,110 @@ module smartlift(SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 						end 
 			endcase
 	end
+	
 
-
-	always @ (*) begin //parte combinacional 	
-		case (estado_atual)
-			andar0: begin
+	always begin //parte combinacional 	
+		case (aux_s)
+			0: begin
 				HEX1 = 7'b1000000; //andar atual = 0
 			end
 			
-			andar1: begin 
+			1: begin 
 				HEX1 = 7'b1111001; //andar atual = 1
 			end
 			
-			andar2: begin 
+			2: begin 
 				HEX1 = 7'b0100100; //andar atual = 2
 			end
 			
-			andar3: begin 
+			3: begin 
 				HEX1 = 7'b0110000; //andar atual = 3
 			end
 			
-			andar4: begin 
+			4: begin 
 				HEX1 = 7'b0011001; //andar atual = 4
 			end
 			
-			andar5: begin 
+			5: begin 
 				HEX1 = 7'b0010010; //andar atual = 5
 			end
 			
-			andar6: begin 
+			6: begin 
 				HEX1 = 7'b0000010; //andar atual = 6
 			end
 			
-			andar7: begin 
+			7: begin 
 				HEX1 = 7'b1111000; //andar atual = 7
 			end
 			
-			andar8: begin 
+			8: begin 
 				HEX1 = 7'b00000000; //andar atual = 8
 			end
 		endcase
 	end
 	
-	always @( posedge CLOCK_50 ) begin //parte sequencial 
-		
-		case (estado_atual) 
+	always @( CLOCK ) begin
+		if ( estado_atual == parado ) begin 
+			LED_G = 1;
+			LED_R = 0;
+		end 
+		else begin 
+			LED_G = 0;
+			LED_R = 1;
+		end		
+	end
+	
+	
+	always @( posedge CLOCK2 ) begin //parte sequencial 
+		if (estado_atual == parado) begin
+			count = count + 1;
+		end
+		else begin
+			count = 0;
+		end
+	
+		rs = 0;
+		case (estado_atual)
 			
-			andar0: begin
-				if ( s > 0 ) begin
+			parado: begin
+				if (s > aux_s) begin 
+					estado_atual = subindo;
 					rs = 1;
-					estado_atual <= andar1;
-					estado_anterior <= andar0; 
-					movimento = 1;
-				end
-				rs = 0;
-			end
-			
-			andar1: begin
-				if ( s > 1 ) begin
+				end else if (s < aux_s) begin
+					estado_atual = descendo;
 					rs = 1;
-					estado_atual <= andar2;
-					estado_anterior <= andar1; 
-					movimento = 1;
 				end
-				rs = 0;
 				
-				if ( s < 1 ) begin
-					rs = 1;
-					estado_atual <= andar0;
-					estado_anterior <= andar1;
-					movimento = 2;					
-				end	
-				rs = 0;
+				if ((count == 5) && (aux_s > 0))   begin
+					estado_atual = inativo;
+				end
 			end
 			
-			andar2: begin
-				if ( s > 2 ) begin
+			subindo: begin
+				aux_s = aux_s + 1;
+				if (s == aux_s) begin
+					estado_atual = parado;
 					rs = 1;
-					estado_atual <= andar3;
-					estado_anterior <= andar2; 
-					movimento = 1;
 				end
-				rs = 0;
-				
-				if ( s < 2 ) begin
+			end
+			descendo: begin 
+				aux_s = aux_s - 1;
+				if (s == aux_s) begin
+					estado_atual = parado;
 					rs = 1;
-					estado_atual <= andar1;
-					estado_anterior <= andar2;
-					movimento = 1;
 				end
-				rs = 0;
 			end
 			
-			andar3: begin
-				if ( s > 3 ) begin
-					rs = 1;
-					estado_atual <= andar4;
-					estado_anterior <= andar3;
-					movimento = 1;
+			inativo: begin 
+				aux_s = aux_s - 1;
+				if (aux_s == 0) begin
+					estado_atual = parado;
 				end
-				rs = 0;
-				
-				if ( s < 3 ) begin
-					rs = 1;
-					estado_atual <= andar2;
-					estado_anterior <= andar3;
-					movimento = 2;
-				end
-				rs = 0;
-			end
-			
-			andar4: begin
-				if ( s > 4 ) begin
-					rs = 1;
-					estado_atual <= andar5;
-					estado_anterior <= andar4; 
-					movimento = 1;
-				end
-				rs = 0;
-				
-				if ( s < 4 ) begin
-					rs = 1;
-					estado_atual <= andar3;
-					estado_anterior <= andar4;
-					movimento = 2;
-				end
-				rs = 0;
-			end
-			
-			andar5: begin
-				if ( s > 5 ) begin
-					rs = 1;
-					estado_atual <= andar6;
-					estado_anterior <= andar5; 
-					movimento = 1;
-				end
-				rs = 0;
-				
-				if ( s < 5 ) begin
-					rs = 1;
-					estado_atual <= andar4;
-					estado_anterior <= andar5;
-					movimento = 2;
-				end
-				rs = 0;
-			end
-			
-			andar6: begin
-				if ( s > 6 ) begin
-					rs = 1;
-					estado_atual <= andar7;
-					estado_anterior <= andar6;
-					movimento = 1; 
-				end
-				rs = 0;
-				
-				if ( s < 6 ) begin
-					rs = 1;
-					estado_atual <= andar5;
-					estado_anterior <= andar6;
-					movimento = 2;				
-				end
-				rs = 0;
-			end
-			
-			andar7: begin
-				if ( s > 7 ) begin
-					rs = 1;
-					estado_atual <= andar8;
-					estado_anterior <= andar7; 
-					movimento = 1;
-				end
-				rs = 0;
-				
-				if ( s < 7 ) begin
-					rs = 1;
-					estado_atual <= andar6;
-					estado_anterior <= andar7;
-					movimento = 2;
-				end
-				rs = 0;
-			end
-			
-			andar8: begin
-				if ( s < 8 ) begin
-					rs = 1;
-					estado_atual <= andar7;
-					estado_anterior <= andar8;
-					movimento = 0;
-				end
-				rs = 0;
-				
-			    /*	if ( s < 8 ) begin
-					rs = 1;
-					estado_atual <= andar7;
-					estado_anterior <= andar8;
-					movimento = 1;
-				end
-				rs = 0;*/
-			end
-			
+			end	
 			endcase
 			
 	end		
+	
 	
 	Reset_Delay r0(    .iCLK(CLOCK_50),.oRESET(DLY_RST));
 
@@ -298,7 +226,7 @@ module smartlift(SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 		.LCD_RW(LCD_RW),
 		.LCD_EN(LCD_EN),
 		.LCD_RS(LCD_RS),
-		.Movimento(movimento),
+		.estado_atual(estado_atual),
 		.Reset(rs)
 	);
 		
@@ -306,5 +234,8 @@ module smartlift(SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 endmodule
 				
 					
-				
-		
+	
+
+	
+	
+	

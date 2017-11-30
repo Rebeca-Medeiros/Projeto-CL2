@@ -13,9 +13,10 @@
 module	LCD_TEST (	//	Host Side //Chamar lcd teste no main
 					iCLK,iRST_N,
 					//	LCD Side
-					LCD_DATA,LCD_RW,LCD_EN,LCD_RS, Movimento, Reset);
+					LCD_DATA,LCD_RW,LCD_EN,LCD_RS, estado_atual, Reset);
 //	Host Side
-input			iCLK,iRST_N, Movimento; //chamar na main
+input			iCLK,iRST_N;
+input wire [1:0] estado_atual; //chamar na main
 input Reset;
 //	LCD Side
 output	[7:0]	LCD_DATA;
@@ -99,11 +100,10 @@ end
 -- Example "A" is row 4 column 1, so hex value is 8'h41"
 -- *see LCD Controller's Datasheet for other graphics characters available
 */
-integer movimento; // 0 - parado, 1 - subindo, 2 - descendo
 
 always
 begin
-	if(Movimento == 0)begin
+	if(estado_atual == 0)begin
 
 	case(LUT_INDEX)
 	//	Initial
@@ -116,7 +116,7 @@ begin
 	//	Line 1
 	LCD_LINE1+0:	LUT_DATA	<=	9'h150;	// P 
 	LCD_LINE1+1:	LUT_DATA	<=	9'h161; // a 
-	LCD_LINE1+2:	LUT_DATA	<=	9'h154; // r
+	LCD_LINE1+2:	LUT_DATA	<=	9'h172; // r
 	LCD_LINE1+3:	LUT_DATA	<=	9'h161; // a
 	LCD_LINE1+4:   	LUT_DATA	<=	9'h164; // d
 	LCD_LINE1+5:    LUT_DATA    <=  9'h16F; // o
@@ -130,9 +130,9 @@ begin
 	
 	endcase
 	
-end
+	end
 
-	if(Movimento == 1) begin
+	else if(estado_atual == 1) begin
 	
 	case(LUT_INDEX)
 	//	Initial
@@ -152,17 +152,39 @@ end
 	LCD_LINE1+6:    LUT_DATA    <=  9'h16F; // o
 	LCD_LINE1+7:    LUT_DATA    <=  9'h120; //espaço
 	LCD_LINE1+8:    LUT_DATA    <=  9'h12B; // +
+	LCD_LINE1+9:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+10:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+11:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+12:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+13:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+14:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+15:    LUT_DATA    <=  9'h120; //espaço
 	
 		//	Change Line
 	LCD_CH_LINE:	LUT_DATA	<=	9'h0C0;
 	
+	LCD_LINE2+0:	LUT_DATA	<=	9'h120;	// S 
+	LCD_LINE2+1:	LUT_DATA	<=	9'h120; // u  
+	LCD_LINE2+2:	LUT_DATA	<=	9'h120; // b 
+	LCD_LINE2+3:	LUT_DATA	<=	9'h120; // i 
+	LCD_LINE2+4:	LUT_DATA	<=	9'h120; // n
+	LCD_LINE2+5:    LUT_DATA    <=  9'h120; // d
+	LCD_LINE2+6:    LUT_DATA    <=  9'h120; // o
+	LCD_LINE2+7:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+8:    LUT_DATA    <=  9'h120; // +
+	LCD_LINE2+9:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+10:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+11:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+12:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+13:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+14:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+15:    LUT_DATA    <=  9'h120; //espaço
+	
 	
 	endcase
 	
-end
-	
-    
-    if(Movimento == 2)begin
+	end
+    else if((estado_atual == 2) || (estado_atual ==3))begin
 		
 	case(LUT_INDEX)
 	//	Initial
@@ -171,6 +193,26 @@ end
 	LCD_INTIAL+2:	LUT_DATA	<=	9'h001;
 	LCD_INTIAL+3:	LUT_DATA	<=	9'h006;
 	LCD_INTIAL+4:	LUT_DATA	<=	9'h080;
+	
+	LCD_LINE1+0:	LUT_DATA	<=	9'h120;	// S 
+	LCD_LINE1+1:	LUT_DATA	<=	9'h120; // u  
+	LCD_LINE1+2:	LUT_DATA	<=	9'h120; // b 
+	LCD_LINE1+3:	LUT_DATA	<=	9'h120; // i 
+	LCD_LINE1+4:	LUT_DATA	<=	9'h120; // n
+	LCD_LINE1+5:    LUT_DATA    <=  9'h120; // d
+	LCD_LINE1+6:    LUT_DATA    <=  9'h120; // o
+	LCD_LINE1+7:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+8:    LUT_DATA    <=  9'h120; // +
+	LCD_LINE1+9:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+10:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+11:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+12:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+13:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+14:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE1+15:    LUT_DATA    <=  9'h120; //espaço
+	
+	//	Change Line
+	LCD_CH_LINE:	LUT_DATA	<=	9'h0C0;
 	
 	//	Line 2
 	LCD_LINE2+0:	LUT_DATA	<=	9'h144;	// D
@@ -183,10 +225,12 @@ end
 	LCD_LINE2+7:	LUT_DATA	<=	9'h16F; // o
 	LCD_LINE2+8:    LUT_DATA    <=  9'h120; //espaço
 	LCD_LINE2+9:    LUT_DATA    <=  9'h12D; // -
-	
-	//	Change Line
-	LCD_CH_LINE:	LUT_DATA	<=	9'h0C0;
-	
+	LCD_LINE2+10:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+11:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+12:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+13:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+14:    LUT_DATA    <=  9'h120; //espaço
+	LCD_LINE2+15:    LUT_DATA    <=  9'h120; //espaço
 	
 	endcase
 	
