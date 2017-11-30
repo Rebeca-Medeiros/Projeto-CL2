@@ -184,7 +184,7 @@ begin
 	endcase
 	
 	end
-    else if((estado_atual == 2) || (estado_atual ==3))begin
+    else if(estado_atual == 2)begin
 		
 	case(LUT_INDEX)
 	//	Initial

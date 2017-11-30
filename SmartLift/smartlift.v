@@ -19,6 +19,9 @@ module smartlift(/*SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 	reg [60:0] aux3;
 	reg [60:0] CLOCK3;
 	
+	reg i = 1;
+	reg j = 1;
+	
 	
 	integer count = 0;
 	
@@ -35,7 +38,7 @@ module smartlift(/*SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 	integer s; //andar solicitado
 	integer aux_s; //andar atual
 	reg [1:0] estado_atual;
-	parameter parado = 0, subindo = 1, descendo = 2, inativo = 3;
+	parameter parado = 0, subindo = 1, descendo = 2;// inativo = 3;
 	// parado subindo descendo 		
 	
 	always @(posedge CLOCK_50)begin
@@ -159,32 +162,23 @@ module smartlift(/*SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 		else begin 
 			LED_G = 0;
 			LED_R = 1;
-		end		
+		end
+		
 	end
 	
 	
 	always @( posedge CLOCK2 ) begin //parte sequencial 
-		if (estado_atual == parado) begin
-			count = count + 1;
-		end
-		else begin
-			count = 0;
-		end
-	
 		rs = 0;
 		case (estado_atual)
 			
 			parado: begin
-				if (s > aux_s) begin 
+			
+				if (s > aux_s ) begin 
 					estado_atual = subindo;
-					rs = 1;
+					rs = 1;		
 				end else if (s < aux_s) begin
 					estado_atual = descendo;
 					rs = 1;
-				end
-				
-				if ((count == 5) && (aux_s > 0))   begin
-					estado_atual = inativo;
 				end
 			end
 			
@@ -197,18 +191,18 @@ module smartlift(/*SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 			end
 			descendo: begin 
 				aux_s = aux_s - 1;
-				if (s == aux_s) begin
+				if (s == aux_s ) begin
 					estado_atual = parado;
 					rs = 1;
 				end
 			end
 			
-			inativo: begin 
+			/*inativo: begin 
 				aux_s = aux_s - 1;
 				if (aux_s == 0) begin
 					estado_atual = parado;
 				end
-			end	
+			end*/
 			endcase
 			
 	end		
@@ -232,10 +226,4 @@ module smartlift(/*SW, LED_G, LED_R, HEX0, HEX1, KEY0, CLOCK_50, LCD_DATA,
 		
 	
 endmodule
-				
-					
-	
-
-	
-	
-	
+		
