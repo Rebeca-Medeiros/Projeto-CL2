@@ -1,3 +1,5 @@
+Projeto final da disciplina Circuitos Lógicos 2
+
 CI SmartLift
 
 O objetivo desse projeto é simular o funcionamento de um elevador utilizando o kit de desenvolvimento DE2-115. Para isso, será usado um display de 7 segmentos que simula a movimentação de um elevador. A Lógica de funcionamento do elevador obedece uma máquina de estados que possui três estados. Os   estado   são: 
